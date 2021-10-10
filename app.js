@@ -1,5 +1,5 @@
 const path = require('path');
-
+const cors = require('cors')
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -32,25 +32,43 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
+const corsOptions = {
+  origin: "https://testherokualex.herokuapp.com/",
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
+const options = {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+  family: 4
+};
+
+const MONGODB_URL = process.env.MONGODB_URL || "mongodb+srv://andrucastro:Fabianvallejo01@cluster0.xfyy6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+
 mongoose
-  .connect(
-    'mongodb+srv://andrucastro:Fabianvallejo01@cluster0.xfyy6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-  )
-  .then(result => {
-    User.findOne().then(user => {
-      if (!user) {
-        const user = new User({
-          name: 'andres',
-          email: 'guevaracastroandres@gmail.com',
-          cart: {
-            items: []
-          }
-        });
-        user.save();
-      }
-    });
-    app.listen(process.env.PORT || 5000);
-  })
-  .catch(err => {
-    console.log(err);
+.connect(
+  MONGODB_URL, options
+)
+.then(result => {
+  User.findOne().then(user => {
+    if (!user) {
+      const user = new User({
+        name: 'andres',
+        email: 'guevaracastroandres@gmail.com',
+        cart: {
+          items: []
+        }
+      });
+      user.save();
+    }
   });
+  const PORT = process.env.PORT || 5000
+  app.listen(PORT);
+})
+.catch(err => {
+  console.log(err);
+});
+
