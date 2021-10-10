@@ -33,7 +33,7 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 const corsOptions = {
-  origin: "https://testherokualex.herokuapp.com/",
+  origin: "https://e-commerce-andres.herokuapp.com/",
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
